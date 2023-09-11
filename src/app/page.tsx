@@ -1,7 +1,13 @@
 import Image from 'next/image'
 
+import HomeHeader from '@/components/HomeHeader'
+
 const Home = () => {
-  return <div>Home</div>
+  return (
+    <>
+      <HomeHeader />
+    </>
+  )
 }
 
 export default Home
