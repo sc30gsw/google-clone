@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
+      <link rel="icon" href="/favicon.svg" />
       <body className={inter.className}>{children}</body>
     </html>
   )
