@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import React, { useCallback, useState, useTransition } from 'react'
+import React, { useState, useTransition } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { BsFillMicFill } from 'react-icons/bs'
 
@@ -12,27 +12,24 @@ const HomeSearch = () => {
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
-  const handleSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault()
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
 
-      console.log(searchText.trim())
+    console.log(searchText.trim())
 
-      if (!searchText.trim()) return
+    if (!searchText.trim()) return
 
-      startTransition(() => router.push(`/search/web?searchTerm=${searchText}`))
-    },
-    [searchText, router],
-  )
+    startTransition(() => router.push(`/search/web?searchTerm=${searchText}`))
+  }
 
-  const randomSearch = useCallback(async () => {
+  const randomSearch = async () => {
     const response = await fetch('https://random-word-api.herokuapp.com/word')
     const res = await response.json()
     const word = res[0]
     if (!word) return
 
     startTransition(() => router.push(`/search/web?searchTerm=${word}`))
-  }, [router])
+  }
 
   return (
     <>
