@@ -4,11 +4,11 @@ import React from 'react'
 import WebSearchResults from '@/components/WebSearchResults'
 import type { Item, SearchData } from '@/types/SearchData'
 
-const fetchSearchData = async (searchTerm: string) => {
+const fetchSearchData = async (searchTerm: string, startIndex: string) => {
   try {
     await new Promise((resolve) => setTimeout(resolve, 300))
     const res = await fetch(
-      `https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_SEARCH_API_KEY}&cx=${process.env.GOOGLE_SEARCH_CONTEXT_KEY}&q=${searchTerm}`,
+      `https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_SEARCH_API_KEY}&cx=${process.env.GOOGLE_SEARCH_CONTEXT_KEY}&q=${searchTerm}&start=${startIndex}`,
     )
 
     if (!res.ok) {
@@ -25,11 +25,12 @@ const fetchSearchData = async (searchTerm: string) => {
 }
 
 type WebSearchPageProps = {
-  searchParams: { searchTerm: string }
+  searchParams: { searchTerm: string; start: string }
 }
 
 const WebSearchPage: React.FC<WebSearchPageProps> = async ({ searchParams }) => {
-  const data = await fetchSearchData(searchParams.searchTerm)
+  const startIndex = searchParams.start || '1'
+  const data = await fetchSearchData(searchParams.searchTerm, startIndex)
   const results: Item[] = data.items
 
   if (!results)

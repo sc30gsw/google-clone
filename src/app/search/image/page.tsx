@@ -2,14 +2,13 @@ import Link from 'next/link'
 import React from 'react'
 
 import ImageSearchResults from '@/components/ImageSearchResults'
-import WebSearchResults from '@/components/WebSearchResults'
 import type { ImageItem, SearchImageData } from '@/types/SearchData'
 
-const fetchSearchData = async (searchTerm: string) => {
+const fetchSearchData = async (searchTerm: string, startIndex: string) => {
   try {
     await new Promise((resolve) => setTimeout(resolve, 300))
     const res = await fetch(
-      `https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_SEARCH_API_KEY}&cx=${process.env.GOOGLE_SEARCH_CONTEXT_KEY}&q=${searchTerm}&searchType=image`,
+      `https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_SEARCH_API_KEY}&cx=${process.env.GOOGLE_SEARCH_CONTEXT_KEY}&q=${searchTerm}&searchType=image&start=${startIndex}`,
     )
 
     if (!res.ok) {
@@ -25,12 +24,13 @@ const fetchSearchData = async (searchTerm: string) => {
   }
 }
 
-type WebSearchPageProps = {
-  searchParams: { searchTerm: string }
+type ImageSearchPageProps = {
+  searchParams: { searchTerm: string; start: string }
 }
 
-const ImageSearchPage: React.FC<WebSearchPageProps> = async ({ searchParams }) => {
-  const data = await fetchSearchData(searchParams.searchTerm)
+const ImageSearchPage: React.FC<ImageSearchPageProps> = async ({ searchParams }) => {
+  const startIndex = searchParams.start || '1'
+  const data = await fetchSearchData(searchParams.searchTerm, startIndex)
   const results: ImageItem[] = data.items
 
   if (!results)
