@@ -9,7 +9,8 @@ import Spinner from '@/components/Spinner'
 
 const HomeSearch = () => {
   const [searchText, setSearchText] = useState('')
-  const [isPending, startTransition] = useTransition()
+  const [isSearchPending, startSearchTransition] = useTransition()
+  const [isRandomPending, startRandomTransition] = useTransition()
   const router = useRouter()
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
@@ -17,7 +18,7 @@ const HomeSearch = () => {
 
     if (!searchText.trim()) return
 
-    startTransition(() => router.push(`/search/web?searchTerm=${searchText}`))
+    startSearchTransition(() => router.push(`/search/web?searchTerm=${searchText}`))
   }
 
   const randomSearch = async () => {
@@ -26,7 +27,7 @@ const HomeSearch = () => {
     const word = res[0]
     if (!word) return
 
-    startTransition(() => router.push(`/search/web?searchTerm=${word}`))
+    startRandomTransition(() => router.push(`/search/web?searchTerm=${word}`))
   }
 
   return (
@@ -46,14 +47,18 @@ const HomeSearch = () => {
       </form>
       <div className="flex flex-col space-y-2 sm:space-y-0 sm:space-x-4 justify-center sm:flex-row mt-8">
         <button onClick={handleSubmit} className="btn">
-          Google Search
+          {isSearchPending ? (
+            <Spinner color="border-gray-300" height="h-5" width="w-5" border="border-2" />
+          ) : (
+            'Google Search'
+          )}
         </button>
         <button
-          disabled={isPending}
+          disabled={isRandomPending}
           onClick={randomSearch}
           className="btn flex items-center justify-center disabled:opacity-80"
         >
-          {isPending ? (
+          {isRandomPending ? (
             <Spinner color="border-gray-300" height="h-5" width="w-5" border="border-2" />
           ) : (
             'I’m Feeling Lucky '
