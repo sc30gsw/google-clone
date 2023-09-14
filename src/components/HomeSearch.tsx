@@ -15,8 +15,6 @@ const HomeSearch = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
-    console.log(searchText.trim())
-
     if (!searchText.trim()) return
 
     startTransition(() => router.push(`/search/web?searchTerm=${searchText}`))
