@@ -46,7 +46,11 @@ const HomeSearch = () => {
         <BsFillMicFill className="text-lg" />
       </form>
       <div className="flex flex-col space-y-2 sm:space-y-0 sm:space-x-4 justify-center sm:flex-row mt-8">
-        <button onClick={handleSubmit} className="btn">
+        <button
+          disabled={isSearchPending}
+          onClick={handleSubmit}
+          className="btn flex items-center justify-center disabled:opacity-80"
+        >
           {isSearchPending ? (
             <Spinner color="border-gray-300" height="h-5" width="w-5" border="border-2" />
           ) : (
