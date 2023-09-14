@@ -1,19 +1,24 @@
 import Link from 'next/link'
 import React from 'react'
 
-import type { Item } from '@/types/Item'
+import WebSearchResults from '@/components/WebSearchResults'
+import type { Item, SearchData } from '@/types/SearchData'
 
-const fetchSearchResult = async (searchTerm: string) => {
+const fetchSearchData = async (searchTerm: string) => {
   try {
+    await new Promise((resolve) => setTimeout(resolve, 300))
     const res = await fetch(
       `https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_SEARCH_API_KEY}&cx=${process.env.GOOGLE_SEARCH_CONTEXT_KEY}&q=${searchTerm}`,
     )
 
-    if (!res.ok) throw new Error('Something went wrong')
-    const data = await res.json()
-    const results: Item[] = data.items
+    if (!res.ok) {
+      console.log(res)
+      throw new Error('Something went wrong')
+    }
 
-    return results
+    const data: SearchData = await res.json()
+
+    return data
   } catch (err) {
     throw new Error('Something went wrong')
   }
@@ -24,7 +29,8 @@ type WebSearchPageProps = {
 }
 
 const WebSearchPage: React.FC<WebSearchPageProps> = async ({ searchParams }) => {
-  const results = await fetchSearchResult(searchParams.searchTerm)
+  const data = await fetchSearchData(searchParams.searchTerm)
+  const results: Item[] = data.items
 
   if (!results)
     return (
@@ -39,7 +45,7 @@ const WebSearchPage: React.FC<WebSearchPageProps> = async ({ searchParams }) => 
       </div>
     )
 
-  return <>{results && results.map((result: Item) => <h1 key={result.cacheId}>{result.title}</h1>)}</>
+  return <>{results && <WebSearchResults results={data} />}</>
 }
 
 export default WebSearchPage
